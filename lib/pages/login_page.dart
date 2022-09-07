@@ -39,9 +39,12 @@ class LoginPage extends StatelessWidget {
                       }
                       return null;
                     },
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
+                    decoration: InputDecoration(
+                      border: const UnderlineInputBorder(),
                       labelText: 'Enter your username',
+                      errorText: state.user.username.isEmpty
+                          ? 'invalid username'
+                          : null,
                     ),
                     onChanged: (value) => context
                         .read<AuthBloc>()
@@ -60,9 +63,12 @@ class LoginPage extends StatelessWidget {
                   ),
                   child: TextFormField(
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      labelText: 'Enter your password',
+                    decoration: InputDecoration(
+                        border: const UnderlineInputBorder(),
+                        labelText: 'Enter your password',
+                        errorText: state.user.password.isEmpty
+                            ? 'invalid password'
+                            : null,
                     ),
                     onChanged: (value) => context
                         .read<AuthBloc>()
@@ -76,7 +82,9 @@ class LoginPage extends StatelessWidget {
               child: BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {
                   return ElevatedButton(
-                    onPressed: state.status == AuthStatus.process
+                    onPressed: state.status == AuthStatus.process ||
+                            state.user.username.isEmpty ||
+                            state.user.password.isEmpty
                         ? null
                         : () {
                             context.read<AuthBloc>().add(
